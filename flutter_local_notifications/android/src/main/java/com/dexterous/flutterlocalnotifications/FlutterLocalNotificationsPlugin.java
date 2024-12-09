@@ -2179,12 +2179,17 @@ public class FlutterLocalNotificationsPlugin
             extractNotificationDetails(result, notificationData);
         if (notificationDetails != null) {
           if (notificationDetails.id != 0) {
-            ForegroundServiceStartParameter parameter =
-                new ForegroundServiceStartParameter(
-                    notificationDetails, startType, foregroundServiceTypes);
-            Intent intent = new Intent(applicationContext, ForegroundService.class);
-            intent.putExtra(ForegroundServiceStartParameter.EXTRA, parameter);
-            ContextCompat.startForegroundService(applicationContext, intent);
+            try {
+              ForegroundServiceStartParameter parameter =
+                      new ForegroundServiceStartParameter(
+                              notificationDetails, startType, foregroundServiceTypes);
+              Intent intent = new Intent(applicationContext, ForegroundService.class);
+              intent.putExtra(ForegroundServiceStartParameter.EXTRA, parameter);
+              ContextCompat.startForegroundService(applicationContext, intent);
+            }catch (Exception e){
+              e.printStackTrace();
+            }
+
             result.success(null);
           } else {
             result.error(
@@ -2204,7 +2209,11 @@ public class FlutterLocalNotificationsPlugin
   }
 
   private void stopForegroundService(Result result) {
-    applicationContext.stopService(new Intent(applicationContext, ForegroundService.class));
+    try {
+      applicationContext.stopService(new Intent(applicationContext, ForegroundService.class));
+    }catch (Exception e){
+      e.printStackTrace();
+    }
     result.success(null);
   }
 
